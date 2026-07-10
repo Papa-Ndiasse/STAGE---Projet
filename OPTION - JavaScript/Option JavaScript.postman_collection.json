@@ -1,0 +1,340 @@
+{
+  "info": {
+    "_postman_id": "367d1bf7-20bf-4824-826e-df67ea98fa54",
+    "name": "Option JavaScript",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56169327",
+    "_collection_link": "https://go.postman.co/collection/56169327-367d1bf7-20bf-4824-826e-df67ea98fa54?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "POST",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timer = Date.now() ; \r",
+              "pm.environment.set(\"Email\", `xedonplasma${timer}@gmail.com`) ; "
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Le statut de la réponse est 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Le nom de l'utilisateur est Papa Ndiassé\", function()\r",
+              "{\r",
+              "    pm.expect(pm.response.json().name).to.eql(\"Papa Ndiassé\")\r",
+              "})\r",
+              "\r",
+              "pm.test(\"le genre de l'utilisateur est \\\"male\\\"\", function()\r",
+              "{\r",
+              "    pm.expect(pm.response.json().gender).to.eql(\"male\")\r",
+              "})\r",
+              "\r",
+              "pm.test(\"L'utilisateur est censé etre \\\"active\\\"\", function()\r",
+              "{\r",
+              "    pm.expect(pm.response.json().status).to.eql(\"active\")\r",
+              "})\r",
+              "\r",
+              "pm.test(\"L'id à bien été crée et est un nombre\", function()\r",
+              "{\r",
+              "    pm.expect(pm.response.json().id).to.be.a(\"number\")\r",
+              "})\r",
+              "\r",
+              "const JsonD = pm.response.json() ; \r",
+              "pm.environment.set(\"UserId\", JsonD.id) ; \r",
+              "\r",
+              "\r",
+              "const schéma = \r",
+              "{\r",
+              "    type : \"object\", // la réponse doit etre en JSON\r",
+              "    required : [\"id\", \"name\", \"email\", \"gender\", \"status\"],\r",
+              "    properties:\r",
+              "    {\r",
+              "        id: {type : \"number\"},\r",
+              "        name: {type : \"string\"},\r",
+              "        email: {type : \"string\"}, \r",
+              "        gender: {type : \"string\"},\r",
+              "        status: {type : \"string\"}\r",
+              "    }\r",
+              "    \r",
+              "} ; \r",
+              "\r",
+              "pm.test(\"Le résultat respecte le schéma\", function()\r",
+              "{\r",
+              "    pm.response.to.have.jsonSchema(schéma)\r",
+              "})\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_secret_0c0q}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\" : \"Papa Ndiassé\",\r\n    \"email\" : \"{{Email}}\",\r\n    \"gender\" : \"male\",\r\n    \"status\" : \"active\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}public/v2/users/",
+          "host": [
+            "{{URL}}public"
+          ],
+          "path": [
+            "v2",
+            "users",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST - Erreur 422",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timer = Date.now() ; \r",
+              "pm.environment.set(\"Email\", `xedonplasma${timer}@gmail.com`) ; "
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Un email déjà utilisé renvoie une erreur 422 bien formée\", function () {\r",
+              "    pm.response.to.have.status(422);  // exige précisément 422, pas un if\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData[0]).to.have.property(\"field\", \"email\");\r",
+              "    pm.expect(jsonData[0]).to.have.property(\"message\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_secret_0c0q}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\" : \"Papa Ndiassé\",\r\n    \"email\" : \"testator@test.fr\",\r\n    \"gender\" : \"male\",\r\n    \"status\" : \"active\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}public/v2/users/",
+          "host": [
+            "{{URL}}public"
+          ],
+          "path": [
+            "v2",
+            "users",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"L'ID correspond bien à l'UserID stocké\", function()\r",
+              "{\r",
+              "    pm.expect(pm.response.json().id).to.eql(Number(pm.environment.get(\"UserId\")))\r",
+              "})  "
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_secret_0c0q}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}public/v2/users/{{UserId}}",
+          "host": [
+            "{{URL}}public"
+          ],
+          "path": [
+            "v2",
+            "users",
+            "{{UserId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PATCH",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Le genre à changé et est \\\"female\\\"\", function()\r",
+              "{\r",
+              "    pm.expect(pm.response.json().gender).to.eql(\"female\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_secret_0c0q}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"gender\" : \"female\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}public/v2/users/{{UserId}}",
+          "host": [
+            "{{URL}}public"
+          ],
+          "path": [
+            "v2",
+            "users",
+            "{{UserId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Le code de retour est sensé être 204\", function()\r",
+              "{\r",
+              "    pm.response.to.have.status(204)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_secret_0c0q}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}public/v2/users/{{UserId}}",
+          "host": [
+            "{{URL}}public"
+          ],
+          "path": [
+            "v2",
+            "users",
+            "{{UserId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "auth_secret_0c0q",
+      "secret": true
+    }
+  ]
+}
