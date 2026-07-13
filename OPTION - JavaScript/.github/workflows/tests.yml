@@ -2,7 +2,7 @@ name: Tests API GoREST
 
 on:
   schedule:
-    - cron: '0 8 * * *'   # tous les jours à 8h UTC (= 10h à Paris en été)
+    - cron: '*/5 * * * *'   # tous les jours à 8h UTC (= 10h à Paris en été)
   workflow_dispatch:       # permet aussi de lancer manuellement depuis GitHub
 
 jobs:
