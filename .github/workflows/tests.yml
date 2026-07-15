@@ -2,7 +2,7 @@ name: Tests API GoREST
 
 on:
   schedule:
-    - cron: '0 * * * *'   # tous les jours à 8h UTC (= 10h à Paris en été)
+    - cron: '0 * * * *'   
   workflow_dispatch:       # permet aussi de lancer manuellement depuis GitHub
 
 jobs:
@@ -21,9 +21,10 @@ jobs:
         run: npm install -g newman newman-reporter-htmlextra
 
       - name: Lancer la collection Postman
-        run: newman run "OPTION - JavaScript/coll.json" -e "OPTION - JavaScript/env.json" -r htmlextra --reporter-htmlextra-export report.html
+        run: newman run "OPTION - JavaScript/coll.json" -e "OPTION - JavaScript/env.json" -r cli,htmlextra --reporter-htmlextra-export report.html
 
       - name: Sauvegarder le rapport
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: rapport-tests
